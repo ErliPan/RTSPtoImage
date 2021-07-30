@@ -5,7 +5,6 @@ import (
 	"errors"
 	"image/jpeg"
 	"log"
-	"os"
 	"time"
 
 	"github.com/deepch/vdk/av"
@@ -18,6 +17,7 @@ var (
 	ErrorStreamExitNoVideoOnStream = errors.New("Stream Exit No Video On Stream")
 	ErrorStreamExitRtspDisconnect  = errors.New("Stream Exit Rtsp Disconnect")
 	ErrorStreamExitNoViewer        = errors.New("Stream Exit On Demand No Viewer")
+	frameCount = 0
 )
 
 func serveStreams() {
@@ -56,7 +56,6 @@ func RTSPWorker(name, url string, OnDemand bool) error {
 		Config.coAd(name, RTSPClient.CodecData)
 	}
 	var VideoStart bool
-	var FrameDecoderSingle *ffmpeg.VideoDecoder
 	var FrameDecoderStream *ffmpeg.VideoDecoder
 	AudioOnly := true
 
@@ -71,10 +70,6 @@ func RTSPWorker(name, url string, OnDemand bool) error {
 	}
 
 	if !AudioOnly {
-		FrameDecoderSingle, err = ffmpeg.NewVideoDecoder(RTSPClient.CodecData[videoIDX].(av.VideoCodecData))
-		if err != nil {
-			log.Fatalln("FrameDecoderSingle Error", err)
-		}
 
 		FrameDecoderStream, err = ffmpeg.NewVideoDecoder(RTSPClient.CodecData[videoIDX].(av.VideoCodecData))
 		if err != nil {
@@ -104,23 +99,17 @@ func RTSPWorker(name, url string, OnDemand bool) error {
 			if packetAV.IsKeyFrame {
 				VideoStart = true
 			}
-			//sample single frame decode encode to jpeg save on disk //
-			if packetAV.IsKeyFrame {
-				if pic, err := FrameDecoderSingle.DecodeSingle(packetAV.Data); err == nil && pic != nil {
-					if out, err := os.Create("./output.jpg"); err == nil {
-						if err = jpeg.Encode(out, &pic.Image, nil); err == nil {
-							log.Println("Poster Saved On Disk Ready ./output.jpg")
-						}
-					}
-				}
-			}
+			
 			//sample stream video decode encode jpeg and play mjpeg over http //
 			if VideoStart {
 				if packetAV.Idx == int8(videoIDX) {
 					if pic, err := FrameDecoderStream.DecodeSingle(packetAV.Data); err == nil && pic != nil {
-						buf := new(bytes.Buffer)
-						if err = jpeg.Encode(buf, &pic.Image, nil); err == nil {
+						frameCount = (frameCount + 1) % 100
+						if (frameCount % 5 == 0) {
+							buf := new(bytes.Buffer)
+							if err = jpeg.Encode(buf, &pic.Image, nil); err == nil {
 							Config.cast(name, buf.Bytes())
+							}
 						}
 					}
 				}
