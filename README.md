@@ -1,22 +1,19 @@
 # RTSPtoImage
 
+!!! THIS IS A FORK !!!
+
 RTSP Stream to Image or Mjpeg
 
 use ffmpeg 
 
 ![RTSPtoImage image](https://user-images.githubusercontent.com/45854343/127688407-2ec5c234-caaf-45ea-b112-b5bcf93c909a.png)
 
-## Recommendation
+## Fork changes
 
-This is an example of getting pictures from rtsp stream
-
-- This is not a working project, this is an example!
-  
-- For ip cameras, I recommend using the usual get request for the poster. example for dahua [http://<IP address>/onvif/media_service/snapshot?channel=0&subtype=0]
-
-- For this example, I recommend using CUDA, but this will require separate work and will greatly reduce the load on the cpu.
-
-- I recommend limiting the number of frames when using mjpeg or using gpu.
+Reduce the cpu usage by 70% by showing only 1/5 of the frames
+the webUi show all cameras all at the same time
+reload button on the bottom
+perfect fit for any 9.7 inch ipad screen (ipad 2,3,4,2017,2018, ecc)
 
 ## Installation
 
@@ -90,4 +87,8 @@ Examples of working with video on golang
 - [RTSPtoHLS](https://github.com/deepch/RTSPtoHLS)
 - [RTSPtoHLSLL](https://github.com/deepch/RTSPtoHLSLL)
 
+  
+  
+ !!! NOT ME !!! But I will leave it because the software is cool
+  
 [![paypal.me/AndreySemochkin](https://ionicabizau.github.io/badges/paypal.svg)](https://www.paypal.me/AndreySemochkin) - You can make one-time donations via PayPal. I'll probably buy a ~~coffee~~ tea. :tea:
