@@ -11,9 +11,13 @@ use ffmpeg
 ## Fork changes
 
 Reduce the cpu usage by 70% by showing only 1/5 of the frames
+
 the webUi show all cameras all at the same time
+
 reload button on the bottom
+
 perfect fit for any 9.7 inch ipad screen (ipad 2,3,4,2017,2018, ecc)
+
 
 ## Installation
 
